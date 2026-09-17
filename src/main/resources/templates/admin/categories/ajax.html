@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}" lang="vi">
+<head>
+<title>Quản lý Category</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h3 class="mb-0">
+				<i class="fa-solid fa-tags me-2"></i>Quản lý Category
+			</h3>
+			<button class="btn btn-success" onclick="showCreateCategoryModal()">
+				<i class="fa-solid fa-plus me-2"></i>Thêm Category (Ajax)
+			</button>
+		</div>
+
+		
+		<div class="card mb-3">
+			<div class="card-body">
+				<form id="searchCategoryForm" class="row g-2 align-items-end"
+					onsubmit="return false;">
+					<div class="col-md-5">
+						<label class="form-label" for="keyword">Tìm theo tên</label>
+						<input type="text" class="form-control" id="keyword"
+							placeholder="Nhập tên loại sản phẩm...">
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="sort">Sắp xếp</label>
+						<select class="form-select" id="sort">
+							<option value="categoryId,asc">Mã tăng dần</option>
+							<option value="categoryId,desc">Mã giảm dần</option>
+							<option value="categoryName,asc">Tên A → Z</option>
+							<option value="categoryName,desc">Tên Z → A</option>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label" for="size">Số dòng/trang</label>
+						<select class="form-select" id="size">
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="20">20</option>
+						</select>
+					</div>
+					<div class="col-md-2 d-grid">
+						<button type="submit" class="btn btn-primary">
+							<i class="fa-solid fa-magnifying-glass me-1"></i>Tìm
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		
+		<div class="card">
+			<div class="table-responsive">
+				<table class="table table-striped table-hover mb-0">
+					<thead class="table-dark">
+						<tr>
+							<th>Id</th>
+							<th>Icon</th>
+							<th>Tên loại sản phẩm</th>
+							<th class="text-end">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody id="categoryTableBody">
+						<tr>
+							<td colspan="4" class="text-center text-muted py-4">Đang tải dữ
+								liệu...</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer d-flex justify-content-between align-items-center">
+				<span class="text-muted small" id="categoryInfo"></span>
+				<nav>
+					<ul class="pagination pagination-sm mb-0" id="categoryPagination"></ul>
+				</nav>
+			</div>
+		</div>
+
+		
+		<div class="modal fade" tabindex="-1" id="createCategoryModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="addCategory" method="post" onsubmit="return false;"
+						enctype="multipart/form-data">
+						<div class="modal-header">
+							<h5 class="modal-title">Thêm Category</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label class="form-label" for="new_categoryname">Tên loại sản
+									phẩm</label>
+								<input type="text" class="form-control" id="new_categoryname"
+									name="categoryName" required>
+							</div>
+							<div class="mb-3">
+								<label class="form-label" for="new_icon">Icon</label>
+								<input type="file" class="form-control" id="new_icon"
+									name="icon" accept="image/*">
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Đóng</button>
+							<button type="submit" class="btn btn-primary">Thêm</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		
+		<div class="modal fade" tabindex="-1" id="updateCategoryInfoModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Cập nhật Category</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+					<div class="modal-body">
+						<div class="card mb-3">
+							<div class="card-header">
+								<h6 class="mb-0">
+									<i class="fa-regular fa-address-card me-1"></i>Thông tin hiện tại
+								</h6>
+							</div>
+							<div class="card-body pb-1">
+								<p class="mb-1" id="updateCategoryInfoModalId"></p>
+								<p class="mb-1" id="updateCategoryInfoModalName"></p>
+								<p class="mb-1" id="updateCategoryInfoModalIcon"></p>
+							</div>
+						</div>
+						<form id="updateCategory" method="post" onsubmit="return false;"
+							enctype="multipart/form-data">
+							<div class="mb-3">
+								<label class="form-label" for="categoryName_up">Tên loại sản
+									phẩm</label>
+								<input type="text" class="form-control" id="categoryName_up"
+									name="categoryName" required>
+							</div>
+							<div class="mb-3">
+								<label class="form-label" for="icon_up">Icon</label>
+								<input type="file" class="form-control" id="icon_up"
+									name="icon" accept="image/*">
+								<div class="form-text">Để trống nếu muốn giữ ảnh cũ.</div>
+							</div>
+							<input type="hidden" id="categoryId_up" name="categoryId">
+							<div class="text-end">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">Đóng</button>
+								<button type="submit" class="btn btn-primary">Cập nhật</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<th:block layout:fragment="scripts">
+		<script th:src="@{/js/category.js}"></script>
+	</th:block>
+</body>
+</html>
+

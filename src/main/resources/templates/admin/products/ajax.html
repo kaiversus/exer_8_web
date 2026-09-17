@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}" lang="vi">
+<head>
+<title>Quản lý Product</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h3 class="mb-0">
+				<i class="fa-solid fa-box me-2"></i>Quản lý Product
+			</h3>
+			<button class="btn btn-success" onclick="showCreateProductModal()">
+				<i class="fa-solid fa-plus me-2"></i>Thêm Product (Ajax)
+			</button>
+		</div>
+
+		
+		<div class="card mb-3">
+			<div class="card-body">
+				<form id="searchProductForm" class="row g-2 align-items-end"
+					onsubmit="return false;">
+					<div class="col-md-4">
+						<label class="form-label" for="keyword">Tìm theo tên</label>
+						<input type="text" class="form-control" id="keyword"
+							placeholder="Nhập tên sản phẩm...">
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="filterCategoryId">Loại sản phẩm</label>
+						<select class="form-select" id="filterCategoryId">
+							<option value="">-- Tất cả --</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="sort">Sắp xếp</label>
+						<select class="form-select" id="sort">
+							<option value="productId,asc">Mã tăng dần</option>
+							<option value="unitPrice,asc">Giá thấp → cao</option>
+							<option value="unitPrice,desc">Giá cao → thấp</option>
+							<option value="productName,asc">Tên A → Z</option>
+							<option value="createDate,desc">Mới nhất</option>
+						</select>
+					</div>
+					<div class="col-md-1">
+						<label class="form-label" for="size">Số dòng</label>
+						<select class="form-select" id="size">
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="20">20</option>
+						</select>
+					</div>
+					<div class="col-md-1 d-grid">
+						<button type="submit" class="btn btn-primary">
+							<i class="fa-solid fa-magnifying-glass"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		
+		<div class="card">
+			<div class="table-responsive">
+				<table class="table table-striped table-hover mb-0 align-middle">
+					<thead class="table-dark">
+						<tr>
+							<th>Id</th>
+							<th>Ảnh</th>
+							<th>Tên sản phẩm</th>
+							<th>Loại</th>
+							<th class="text-end">Giá</th>
+							<th class="text-end">Giảm giá</th>
+							<th class="text-end">SL</th>
+							<th>Mô tả</th>
+							<th>Trạng thái</th>
+							<th class="text-end">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody id="productTableBody">
+						<tr>
+							<td colspan="10" class="text-center text-muted py-4">Đang tải dữ
+								liệu...</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer d-flex justify-content-between align-items-center">
+				<span class="text-muted small" id="productInfo"></span>
+				<nav>
+					<ul class="pagination pagination-sm mb-0" id="productPagination"></ul>
+				</nav>
+			</div>
+		</div>
+
+		
+		<div class="modal fade" tabindex="-1" id="productModal">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<form id="productForm" method="post" onsubmit="return false;"
+						enctype="multipart/form-data">
+						<div class="modal-header">
+							<h5 class="modal-title" id="productModalTitle">Thêm Product</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<input type="hidden" id="productId" name="productId">
+							<div class="row g-3">
+								<div class="col-md-8">
+									<label class="form-label" for="productName">Tên sản phẩm</label>
+									<input type="text" class="form-control" id="productName"
+										name="productName" required>
+								</div>
+								<div class="col-md-4">
+									<label class="form-label" for="categoryId">Loại sản phẩm</label>
+									<select class="form-select" id="categoryId" name="categoryId"
+										required>
+									</select>
+								</div>
+								<div class="col-md-4">
+									<label class="form-label" for="unitPrice">Giá (đ)</label>
+									<input type="number" step="0.01" min="0" class="form-control"
+										id="unitPrice" name="unitPrice" value="0" required>
+								</div>
+								<div class="col-md-4">
+									<label class="form-label" for="discount">Giảm giá (%)</label>
+									<input type="number" step="0.01" min="0" class="form-control"
+										id="discount" name="discount" value="0">
+								</div>
+								<div class="col-md-4">
+									<label class="form-label" for="quantity">Số lượng</label>
+									<input type="number" min="0" class="form-control" id="quantity"
+										name="quantity" value="0" required>
+								</div>
+								<div class="col-md-8">
+									<label class="form-label" for="description">Mô tả</label>
+									<input type="text" class="form-control" id="description"
+										name="description" maxlength="500">
+								</div>
+								<div class="col-md-4">
+									<label class="form-label" for="status">Trạng thái</label>
+									<select class="form-select" id="status" name="status">
+										<option value="1">Đang bán</option>
+										<option value="0">Ngừng bán</option>
+									</select>
+								</div>
+								<div class="col-md-8">
+									<label class="form-label" for="imageFile">Ảnh sản phẩm</label>
+									<input type="file" class="form-control" id="imageFile"
+										name="imageFile" accept="image/*">
+									<div class="form-text" id="imageHint">Để trống nếu muốn giữ
+										ảnh cũ.</div>
+								</div>
+								<div class="col-md-4" id="currentImageBox"></div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Đóng</button>
+							<button type="submit" class="btn btn-primary"
+								id="productSubmitBtn">Thêm</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<th:block layout:fragment="scripts">
+		<script th:src="@{/js/product.js}"></script>
+	</th:block>
+</body>
+</html>
+

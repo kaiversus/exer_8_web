@@ -1,0 +1,35 @@
+/* Vai chinh sua nho cho giao dien */
+
+.table thead th {
+	white-space: nowrap;
+}
+
+.table td {
+	vertical-align: middle;
+}
+
+.table-actions {
+	white-space: nowrap;
+}
+
+.card-product img {
+	height: 180px;
+	object-fit: cover;
+	background-color: #f1f3f5;
+}
+
+.card-product .no-image {
+	height: 180px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f1f3f5;
+	color: #adb5bd;
+}
+
+.desc-cell {
+	max-width: 260px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

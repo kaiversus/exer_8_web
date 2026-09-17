@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}" lang="vi">
+<head>
+<title>Trang chủ</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="p-4 mb-4 bg-white rounded border">
+			<h3 class="mb-1">Danh sách sản phẩm</h3>
+			<p class="text-muted mb-0">Dữ liệu trên trang này được nạp bằng AJAX
+				(jQuery) gọi vào RESTful API <code>/api/product/search</code>.</p>
+		</div>
+
+		<div class="card mb-4">
+			<div class="card-body">
+				<form id="homeFilterForm" class="row g-2 align-items-end"
+					onsubmit="return false;">
+					<div class="col-md-4">
+						<label class="form-label" for="keyword">Tìm theo tên</label>
+						<input type="text" class="form-control" id="keyword"
+							placeholder="Nhập tên sản phẩm...">
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="filterCategoryId">Loại sản phẩm</label>
+						<select class="form-select" id="filterCategoryId">
+							<option value="">-- Tất cả --</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="sort">Sắp xếp</label>
+						<select class="form-select" id="sort">
+							<option value="unitPrice,asc">Giá thấp → cao</option>
+							<option value="unitPrice,desc">Giá cao → thấp</option>
+							<option value="productName,asc">Tên A → Z</option>
+							<option value="createDate,desc">Mới nhất</option>
+						</select>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label" for="size">Số sản phẩm/trang</label>
+						<select class="form-select" id="size">
+							<option value="6">6</option>
+							<option value="12">12</option>
+							<option value="24">24</option>
+						</select>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="row g-3" id="productGrid">
+			<div class="col-12 text-center text-muted py-5">Đang tải dữ liệu...</div>
+		</div>
+
+		<div class="d-flex justify-content-between align-items-center mt-4">
+			<span class="text-muted small" id="homeInfo"></span>
+			<nav>
+				<ul class="pagination pagination-sm mb-0" id="homePagination"></ul>
+			</nav>
+		</div>
+	</div>
+
+	<th:block layout:fragment="scripts">
+		<script th:src="@{/js/home.js}"></script>
+	</th:block>
+</body>
+</html>
+
